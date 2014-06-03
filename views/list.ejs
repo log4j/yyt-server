@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+      <div class='main'>
+    <h1><%= title %>    <a href='../'>HOME</a></h1>
+    <p>Welcome to <%= title %></p>
+    <table style="border:1px solid #dddddd">
+    <% for(var i=0;i<cates.length; i++) { %>
+        <tr >
+            <td><font style='color:red'><%= cates[i].id %></font></td>
+            <td style="color:blue;width:50px"><a href="list/<%= cates[i].id %>"><%= cates[i].name %></a></td>
+            <td> <%= cates[i].profile %></td>
+      <td> <%= cates[i].updatetime %></td>
+            
+        </tr>
+    <% } %>
+    </table>
+    </div>
+  </body>
+</html>

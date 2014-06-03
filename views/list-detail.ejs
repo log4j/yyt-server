@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+      <div class='main'>
+
+      <h1><a href="../list">返回</a></h1>
+    <table class='list'>
+    <% for(var i=0;i<arts.length; i++) { %>
+        <tr >
+            <td><img src='../images/art/<%= arts[i].image %>' style='width:256px;'></img></td>
+            <td><font style='color:red'><%= arts[i].id %></font></td>
+            <td style="color:blue;"><a href="list/<%= arts[i].id %>" style="text-decoration:none"><%= arts[i].name %></a></td>
+            
+            <td> <%= arts[i].updatetime %></td>
+            
+        </tr>
+    <% } %>
+    </table>
+    </div>
+  </body>
+</html>

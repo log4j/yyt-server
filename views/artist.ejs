@@ -6,9 +6,9 @@
   </head>
   <body>
       <div class='main'>
-    <h1><%= title %></h1>
+    <h1><%= title %>    <a href='../'>HOME</a></h1>
     <p>Welcome to <%= title %></p>
-    <table style="border:1px solid #dddddd">
+    <table class='list'>
     <% for(var i=0;i<artists.length; i++) { %>
         <tr class="<% if(i==0){%> firstitem <%}%>">
             <td><font style='color:red'><%= artists[i].id %></font></td>
