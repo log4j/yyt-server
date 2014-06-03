@@ -19,7 +19,7 @@ router.get('/:id', function(req, res) {
 
 router.get('/', function(req, res) {
     var artist = db.get('artist');
-    artist.find({}).sort({id:1}).success(function(e,docs){
+    artist.find({},function(e,docs){
         res.render('artist', { title: 'Artists',artists:docs});
     });
     /*artist.find({},{id:1},function(e,docs){
