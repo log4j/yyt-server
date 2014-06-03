@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= artist.name %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= artist.name %></h1>
+      <a href="../artist">返回</a>
+    <table style="border:1px solid #dddddd">
+        <tr><th></th><td><img src='../images/artist/<%= artist.image %>' style='width:128px;height:128px'></img></td></tr>
+        <tr><th>姓名</th><td><%= artist.name %></td></tr>
+        <tr><th>性別</th><td><%= artist.sex %></td></tr>
+        <tr><th>地址</th><td><%= artist.location %></td></tr>
+        <tr><th>座右銘</th><td><%= artist.motto %></td></tr>
+    </table>
+  </body>
+</html>

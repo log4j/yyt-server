@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <table style="border:1px solid #dddddd">
+    <% for(var i=0;i<artists.length; i++) { %>
+        <tr class="<% if(i==0){%> firstitem <%}%>">
+            <td><font style='color:red'><%= artists[i].id %></font></td>
+            <td><img src='../images/artist/<%= artists[i].image %>' style='width:36px;height:36px'></img></td>
+            <td style="color:blue;width:50px"><a href="artist/<%= artists[i].id %>"><%= artists[i].name %></a></td>
+            <td> <%= artists[i].location %></td>
+      <td> <%= artists[i].motto %></td>
+            
+        </tr>
+    <% } %>
+    </table>
+  </body>
+</html>

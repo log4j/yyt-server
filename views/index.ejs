@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <table>
+    <% for(var i=0;i<users.length; i++) { %>
+      <tr class="<% if(i==0){%> firstitem <%}%>"><td><font style='color:red'><%= users[i].id %></font></td><td> <%= users[i].name %>           </td></tr>
+    <% } %>
+    </table>
+      
+  </body>
+</html>
