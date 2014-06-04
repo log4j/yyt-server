@@ -61,5 +61,6 @@ app.use(function(err, req, res, next) {
     });
 });
 
+app.enable('jsonp callback');
 
 module.exports = app;

@@ -1,9 +1,11 @@
 /**
  * insert test data into mongodb (mdb)
- */ 
+ */
 
 var express = require('express');
 var router = express.Router();
+var model = require('../models/model.js');
+var async = require('async');
 
 require('../util/date.format.js');
 
@@ -114,113 +116,146 @@ var cateProfile = [
 
 
 var artIds = [
-    '2014050612010001.jpg',	
-    '2014050612010006.jpg',	
+    '2014050612010001.jpg',
+    '2014050612010006.jpg',
     '2014050612010011.jpg',
-    '2014050612010002.jpg',	
-    '2014050612010007.jpg',	
+    '2014050612010002.jpg',
+    '2014050612010007.jpg',
     '2014050612010012.jpg',
-    '2014050612010003.jpg',	
-    '2014050612010008.jpg',	
+    '2014050612010003.jpg',
+    '2014050612010008.jpg',
     '2014050612010013.jpg',
-    '2014050612010004.jpg',	
-    '2014050612010009.jpg',	
+    '2014050612010004.jpg',
+    '2014050612010009.jpg',
     '2014050612010014.jpg',
-    '2014050612010005.jpg',	
+    '2014050612010005.jpg',
     '2014050612010010.jpg'
 ];
 var artName = [
-    '2014050612010001',	
-    '2014050612010006',	
+    '2014050612010001',
+    '2014050612010006',
     '2014050612010011',
-    '2014050612010002',	
-    '2014050612010007',	
+    '2014050612010002',
+    '2014050612010007',
     '2014050612010012',
-    '2014050612010003',	
-    '2014050612010008',	
+    '2014050612010003',
+    '2014050612010008',
     '2014050612010013',
-    '2014050612010004',	
-    '2014050612010009',	
+    '2014050612010004',
+    '2014050612010009',
     '2014050612010014',
-    '2014050612010005',	
+    '2014050612010005',
     '2014050612010010'
 ];
 
 
 /* GET home page. */
-router.get('/', function(req, res) {
-    var content = "";
-    var finished = false;
-    var artists = [];
-    for (var i=0;i<20;i++){
-        var id = i+1;
-        var artist = new Object();
-        artist.id = id;
-        artist.name = artistName[i];
-        artist.birthday = artistBirthday[i];
-        artist.location = artistLocation[i];
-        artist.image = id+'.jpg';
-        artist.sex = i%2==0?'男':'女';
-        artist.motto = artistMotto[i];
+router.get('/', function (req, res) {
+    
+    var content = '';
+    async.waterfall([
+        //删除Aritst数据
+        function(callback){
+            model.Artist.remove({},function(err){
+                content += '<font color="red">Artist data removed!</font><br>';
+                callback(err);
+            });
+        },
+        //删除Category数据
+        function(callback){
+            model.Category.remove({},function(err){
+                content += '<font color="red">Category data removed!</font><br>';
+                callback(err);
+            });
+        },
+        //删除Art数据
+        function(callback){
+            model.Art.remove({},function(err){
+                content += '<font color="red">Art data removed!</font><br><br>';
+                callback(err);
+            });
+        },
         
-        artists.push(artist);
-    }
-    
-    var now = new Date();
-    var date = now.format('yyyy-mm-dd');
-      
-    
-    /*var artistDB = db.get('artist');
-    artistDB.insert(artists,function(err, doc){
-        finished = true;
-        content += doc;
-    });*/
-    
-    var cates = [];
-    for (var i=0;i<3;i++){
-        var id = i+1;
-        var cate = new Object();
-        cate.id = id;
-        cate.name = cateName[i];
-        cate.profile = cateProfile[i];
-        cate.updatetime = date;
-        cates.push(cate);
-    }
-    
-    
-    /*var cateDB = db.get('category');
-    cateDB.insert(cates,function(err, doc){
-        finished = true;
-        content += doc;
-    });*/
-   // res.send('init start...');
-
-    var arts = [];
-    for(var i=0;i<artIds.length;i++){
-        var id = i+1;
-        var art = new Object();
-        art.id = id;
-        art.artist = parseInt(Math.random()*artistBirthday.length)+1;
-        art.name = artName[i];
-        art.image = artIds[i];
-        art.category = parseInt(Math.random()*3)+1;
-        now.setSeconds(i);
-        art.updatetime = now.format('yyyy-mm-dd HH:MM:ss');
+        //插入 Aritst 数据
+        function(callback){
+            var artists = [];
+            for (var i=0;i<20;i++){
+                var id = i+1;
+                var artist = new Object();
+                artist.name = artistName[i];
+                artist.birthday = artistBirthday[i];
+                artist.location = artistLocation[i];
+                artist.avatar = id+'.jpg';
+                artist.sex = i%2==0?'男':'女';
+                artist.motto = artistMotto[i];
+                artists.push(artist);
+            }
+            model.Artist.create(artists,function(err){
+                content += 'Artist data inserted!<br>'
+                callback(err);
+            });
+        },
         
-        arts.push(art);
-    }
-    var artDB = db.get('art');
-    artDB.insert(arts,function(err, doc){
-        finished = true;
-        content += doc;
-    });
-    
-    var pid = setInterval(function(){
-        if(finished){
-            clearInterval(pid);
-            res.send(content);
+        //插入 Category 数据
+        function(callback){
+            var cates = [];
+            for (var i=0;i<3;i++){
+                var cate = new Object();
+                cate.name = cateName[i];
+                cate.profile = cateProfile[i];
+                cates.push(cate);
+            }
+            model.Category.create(cates,function(err){
+                content += 'Category data inserted!<br>';
+                callback(err);
+            });
+        },
+        
+        //获取生成的category的id列表,传入下个函数
+        function(callback){
+            model.Category.find({},'_id',function(err,docs){
+                // docs -> id list
+                var categoryIds = [];
+                for(var i=0;i<docs.length;i++)
+                    categoryIds.push(docs[i]._id);
+                callback(err,categoryIds); 
+            });
+        },
+        
+        //获取生成的artist的id列表,传入下个函数
+        function(categoryIds,callback){
+            model.Artist.find({},'_id',function(err,docs){
+                // docs -> id list
+                var artistIds = [];
+                for(var i=0;i<docs.length;i++)
+                    artistIds.push(docs[i]._id);
+                callback(err,artistIds,categoryIds); 
+            });
+        },
+        
+        //根据生成的cateogry和artist的id,随机选取,创建art数据
+        function(artistIds,categoryIds,callback){
+            var arts = [];
+            for(var i=0;i<artIds.length;i++){
+                var art = new Object();
+                art.artist = artistIds[parseInt(Math.random()*artistIds.length)];
+                art.name = artName[i];
+                art.image = artIds[i];
+                art.category = categoryIds[parseInt(Math.random()*categoryIds.length)];
+                arts.push(art);
+            }
+            model.Art.create(arts,function(err){
+                content += 'Art data inserted!<br>';
+                callback(err);
+            });    
         }
-    },200);
+        ],
+        function(err, values){
+            console.log("final function :"+values);
+            res.send(content);
+        });
+  
+
 });
 
 module.exports = router;

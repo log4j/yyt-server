@@ -11,8 +11,9 @@
     <table class='list'>
     <% for(var i=0;i<artists.length; i++) { %>
         <tr class="<% if(i==0){%> firstitem <%}%>">
+            <td><a href="list/artist/<%= artists[i].id %>">查看作品</a></td>
             <td><font style='color:red'><%= artists[i].id %></font></td>
-            <td><img src='../images/artist/<%= artists[i].image %>' style='width:36px;height:36px'></img></td>
+            <td><img src='../images/artist/<%= artists[i].avatar %>' style='width:36px;height:36px'></img></td>
             <td style="color:blue;width:50px"><a href="artist/<%= artists[i].id %>"><%= artists[i].name %></a></td>
             <td> <%= artists[i].location %></td>
       <td> <%= artists[i].motto %></td>

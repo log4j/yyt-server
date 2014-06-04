@@ -1,30 +1,33 @@
 var express = require('express');
 var router = express.Router();
+var model = require('../models/model.js');
 
 var db = require('./db.js');
 
 /* GET home page. */
 router.get('/:id', function(req, res) {
-    
-    var para = new Object();
-    console.log(req.param('id'));
-    para.id = parseInt(req.param('id'));
-    var artist = db.get('artist');
-    artist.findOne(para,function(e,doc){
-        res.render('artist-detail', {artist:doc});
+    var id = req.param('id');
+    model.Artist.findById(id,function(e,doc){
+        if(req.query && req.query.callback){
+            res.jsonp(doc);
+        }
+        else{
+            res.render('artist-detail', {artist:doc});
+        }
+        
     });
 
   
 });
 
 router.get('/', function(req, res) {
-    var artist = db.get('artist');
-    artist.find({},function(e,docs){
-        res.render('artist', { title: 'Artists',artists:docs});
+    
+    model.Artist.find({},null,function(e,artists){
+        if(req.query && req.query.callback)
+            res.jsonp(artists);
+        else
+            res.render('artist', { title: 'Artists',artists:artists});
     });
-    /*artist.find({},{id:1},function(e,docs){
-        res.render('artist', { title: 'Artists',artists:docs});
-    });*/
 });
 
 module.exports = router;
